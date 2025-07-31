@@ -1,1 +1,1 @@
-# instaWallet
+# Insta Wallet
