@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const { User } = require("../db")
 const { JWT_SECRET } = require("../config")
+const { authMiddleware } = require("../middleware")
 
 const router = express.Router();
 
@@ -90,6 +91,29 @@ router.post("/signin", async (req, res) => {
 
     res.status(411).json({
         message: "Error while logging in"
+    })
+})
+
+const updateBody = z.object({
+    password: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+});
+
+router.put("/", authMiddleware, async(req, res) => {
+    const { success } = updateBody.safeParse(req.body)
+    if (!success) {
+        res.status(411).json({
+            message: "Error occurred while updating information"
+        })
+    }
+
+    await User.updateOne(req.body, {
+        _id: req.userId
+    })
+
+    res.json({
+        message: "Information updated successfully!"
     })
 })
 
