@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
 const { minLength, maxLength } = require("zod");
-require('dotnev').config();
+require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URI).then(() => console.log("Mongo Connected"));
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("Mongo Connected"))
+    .catch(err => {
+        console.error("Mongo Connection Failed", err)
+    })
 
 const userSchema = new mongoose.Schema({
     username: {
